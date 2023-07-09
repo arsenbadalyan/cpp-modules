@@ -1,0 +1,30 @@
+# Variables
+NAME = phonebook
+COMPILER = c++
+# CFLAGS = -Wall -Wextra -Werror -std=c++98
+RM = rm -rf
+
+# Source Files
+SRC = $(wildcard *.cpp)
+
+# Object Files
+OBJ = $(patsubst %.cpp, %.o, $(SRC))
+
+# Rules
+all: $(NAME)
+
+$(NAME): $(OBJ) Makefile
+	$(COMPILER) $(CFLAGS) $(OBJ) -o $(NAME)
+
+%.o: %.cpp
+	$(COMPILER) $(CFLAGS) -c $< -o $@
+
+clean:
+	$(RM) $(OBJ)
+
+fclean: clean
+	$(RM) $(NAME)
+
+re: fclean all
+
+.PHONY: all clean fclean re
