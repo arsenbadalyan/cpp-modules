@@ -18,10 +18,11 @@ class Contact {
         std::string getNickname(void);
         std::string getPhone(void);
         std::string getSecret(void);
-        int setFirstName(std::string firstName);
-        int setLastName(std::string lastName);
-        int setNickname(std::string nickname);
-        int setPhone(std::string phone);
-        int setSecret(std::string phone);
+        bool setFirstName(std::string firstName);
+        bool setLastName(std::string lastName);
+        bool setNickname(std::string nickname);
+        bool setPhone(std::string phone);
+        bool setSecret(std::string phone);
+		static bool isEmpty(std::string line);
 };
 #endif

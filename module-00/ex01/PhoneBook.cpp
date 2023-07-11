@@ -1,21 +1,32 @@
-#include <iostream>
 #include "PhoneBook.hpp"
 
-static const std::string ADD = "ADD";
-static const std::string SEARCH = "SEARCH";
-static const std::string EXIT = "EXIT";
+static void drawTableRow(std::string const col1, std::string const col2, std::string const col3, std::string const col4);
+static std::string modifyInfo(std::string info);
 
-void PhoneBook::add(void) {
-    std::string input;
+const std::string PhoneBook::ADD = "ADD";
+const std::string PhoneBook::SEARCH = "SEARCH";
+const std::string PhoneBook::EXIT = "EXIT";
 
-    std::cout << "Contact Info:" << std::endl;
-    std::cout << "Enter First Name: ";
-    // getline(std::cin, input);
-    
+// getters
+int PhoneBook::getIndex(void) {
+	return (this->_index);
 }
 
-void PhoneBook::search(void) {
+PhoneBook::PhoneBook(void) {
+	this->_index = 0;
+}
 
+Contact PhoneBook::add(void) {
+    Contact contact;
+	std::string input;
+
+    std::cout << std::endl << "Contact Info" << std::endl;
+    do { std::cout << "Enter First Name: "; std::cin.clear(); getline(std::cin, input); } while (!contact.setFirstName(input));
+    do { std::cout << "Enter Last Name: "; std::cin.clear(); getline(std::cin, input); } while (!contact.setLastName(input));
+	do { std::cout << "Enter Nickname: "; std::cin.clear(); getline(std::cin, input); } while (!contact.setNickname(input));
+	do { std::cout << "Enter Phone number: "; std::cin.clear(); getline(std::cin, input); } while (!contact.setPhone(input));
+	do { std::cout << "Enter your darkest secret: "; std::cin.clear(); getline(std::cin, input); } while (!contact.setSecret(input));
+    return contact;
 }
 
 void PhoneBook::processInput(void) {
@@ -24,13 +35,93 @@ void PhoneBook::processInput(void) {
     while (1) {
         std::cout << "Please type one of commands: [ADD] | [SEARCH] | [EXIT]" << std::endl;
         std::cout << "Your input: ";
-        getline(std::cin, input);
-        // if (input == ::EXIT)
-        //     return ;
-        // if (input == ::ADD)
-        //     add();
-        // if (input == ::SEARCH)
-        //     search();
+		std::cin.clear();
+		getline(std::cin, input);
+        if (input == PhoneBook::EXIT)
+            return ;
+        if (input == PhoneBook::ADD) {
+			this->_contacts[this->_index] = this->add();
+			this->nextIndex();
+		}
+        if (input == PhoneBook::SEARCH) {
+			if (this->getIndex() > 0)
+				search();
+			else
+				std::cout  << std::endl << "! WARNING !" << std::endl << "There is no contacts to show. Please add new contacts with [ADD] command." << std::endl << std::endl;
+		}
     }
     return ;
+}
+
+void PhoneBook::nextIndex(void) {
+	this->_index++;
+	if (this->_index >= CONTACTS_MAX_SIZE)
+		this->_index = 0;
+	return ;
+}
+
+static void drawTableRow(std::string const col1, std::string const col2, std::string const col3, std::string const col4) {
+	std::cout << "|" << std::setw(TABLE_LENGTH) << col1;
+	std::cout << "|" << std::setw(TABLE_LENGTH) << col2;
+	std::cout << "|" << std::setw(TABLE_LENGTH) << col3;
+	std::cout << "|" << std::setw(TABLE_LENGTH) << col4;
+	std::cout << "|" << std::endl;
+	return ;
+}
+
+static std::string modifyInfo(std::string info) {
+	return (info.size() >= TABLE_LENGTH ? (info.substr(0, TABLE_LENGTH - 1) + '.') : info);
+}
+
+void PhoneBook::displayTable(void) {
+	Contact curContact;
+
+	std::cout << std::endl;
+	drawTableRow("index", "first name", "last name", "nickname");
+	for (int i = 0; i < this->getIndex(); i++) {
+		curContact = this->_contacts[i];
+		drawTableRow(
+				std::to_string(i + 1),
+				modifyInfo(curContact.getFirstName()),
+				modifyInfo(curContact.getLastName()),
+				modifyInfo(curContact.getNickname())
+		);
+	}
+	std::cout << std::endl;
+	return ;
+}
+
+bool PhoneBook::displayContact(std::string index) {
+	Contact contact;
+	int numIndex;
+
+	for (int i = 0; index[i]; i++)
+		if (!isdigit(index[i]))
+			return (false);
+	numIndex = std::atoi(index.c_str());
+	if (numIndex < 1 || numIndex > this->getIndex())
+		return (false);
+	contact = this->_contacts[numIndex - 1];
+	std::cout << std::endl << "DETAILED INFO" << std::endl;
+	std::cout << "First Name: " << contact.getFirstName() << std::endl;
+	std::cout << "Last Name: " << contact.getLastName() << std::endl;
+	std::cout << "Nickname: " << contact.getNickname() << std::endl;
+	std::cout << "Phone Number: " << contact.getPhone() << std::endl;
+	std::cout << "Darkest Secret: " << contact.getSecret() << std::endl;
+	std::cout << std::endl;
+	return (true);
+}
+
+void PhoneBook::search(void) {
+	std::string index;
+
+	this->displayTable();
+	std::cout << "! INFO: You can enter [EXIT] to go back to menu !" << std::endl << std::endl;
+	std::cout << "Enter one of table indexes to watch full data: ";
+	std::cin >> index;
+	if (index == PhoneBook::EXIT)
+		return ;
+	if (!this->displayContact(index))
+		this->search();
+	return ;
 }

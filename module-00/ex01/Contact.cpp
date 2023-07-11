@@ -20,30 +20,47 @@ std::string Contact::getSecret(void) {
     return (this->_secret);
 }
 
-int Contact::setFirstName(std::string firstName) {
+bool Contact::setFirstName(std::string firstName) {
+	if (Contact::isEmpty(firstName))
+		return (false);
     this->_firstName = firstName;
-    return (EXIT_SUCCESS);
+    return (true);
 }
 
-int Contact::setLastName(std::string lastName) {
+bool Contact::setLastName(std::string lastName) {
+	if (Contact::isEmpty(lastName))
+		return (false);
     this->_lastName = lastName;
-    return (EXIT_SUCCESS);
+    return (true);
 }
 
-int Contact::setNickname(std::string nickname) {
+bool Contact::setNickname(std::string nickname) {
+	if (Contact::isEmpty(nickname))
+		return (false);
     this->_nickname = nickname;
-    return (EXIT_SUCCESS);
+    return (true);
 }
 
-int Contact::setPhone(std::string phone) {
-    for(int i = 0; phone[i]; i++)
+bool Contact::setPhone(std::string phone) {
+    if (Contact::isEmpty(phone))
+		return (false);
+	for(int i = 0; phone[i]; i++)
         if(!isdigit(phone[i]))
-            return (EXIT_FAILURE);
+            return (false);
     this->_phone = phone;
-    return (EXIT_SUCCESS);
+    return (true);
 }
 
-int Contact::setSecret(std::string secret) {
+bool Contact::setSecret(std::string secret) {
     this->_secret = secret;
-    return (EXIT_SUCCESS);
+    return (true);
+}
+
+bool Contact::isEmpty(std::string line) {
+	if (!line.size())
+		return (true);
+	for (int i = 0; line[i]; i++)
+		if((line[i] < 9 || line[i] > 13) && line[i] != 32)
+			return (false);
+	return (true);
 }
