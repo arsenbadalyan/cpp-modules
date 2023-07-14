@@ -6,6 +6,7 @@ RM = rm -rf
 
 # Source Files
 SRC = $(wildcard *.cpp)
+LIBS = $(wildcard *.hpp)
 
 # Object Files
 OBJ = $(patsubst %.cpp, %.o, $(SRC))
@@ -13,7 +14,7 @@ OBJ = $(patsubst %.cpp, %.o, $(SRC))
 # Rules
 all: $(NAME)
 
-$(NAME): $(OBJ) Makefile
+$(NAME): $(OBJ) Makefile $(LIBS)
 	$(COMPILER) $(CFLAGS) $(OBJ) -o $(NAME)
 	@echo "\nExecutable is - $(NAME)"
 

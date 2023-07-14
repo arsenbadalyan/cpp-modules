@@ -1,5 +1,5 @@
 # Variables
-NAME = ptr_ref
+NAME = harlFilter
 COMPILER = c++
 CFLAGS = -Wall -Wextra -Werror -std=c++98
 RM = rm -rf
