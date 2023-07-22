@@ -4,13 +4,13 @@
 #include <iostream>
 
 class Harl {
+	public:
+		void complain(std::string);
 	private:
 		void debug(void);
 		void info(void);
 		void warning(void);
 		void error(void);
-	public:
-		void complain(std::string);
 };
 
 #endif  //!__HARL__H__

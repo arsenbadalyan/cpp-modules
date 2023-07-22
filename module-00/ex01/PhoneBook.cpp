@@ -36,7 +36,8 @@ void PhoneBook::processInput(void) {
         std::cout << std::endl << "Please type one of commands: [ADD] | [SEARCH] | [EXIT]" << std::endl;
         std::cout << "Your input: ";
 		getline(std::cin, input);
-		
+		if (!std::cin.good())
+			return;
         if (input == PhoneBook::EXIT)
             return ;
         if (input == PhoneBook::ADD) {
