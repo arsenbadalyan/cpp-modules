@@ -122,6 +122,8 @@ void PhoneBook::search(void) {
 	std::cout << "! INFO: You can enter [EXIT] to go back to menu !" << std::endl << std::endl;
 	std::cout << "Enter one of table indexes to watch full data: ";
 	std::cin >> index;
+	if (!std::cin.good())
+		return ;
 	std::cin.clear();
 	std::cin.ignore();
 	if (index == PhoneBook::EXIT)
