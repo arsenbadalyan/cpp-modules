@@ -1,5 +1,5 @@
 # Variables
-NAME = fixed-point
+NAME = bsp
 COMPILER = c++
 CFLAGS = -Wall -Wextra -Werror -std=c++98
 RM = rm -rf

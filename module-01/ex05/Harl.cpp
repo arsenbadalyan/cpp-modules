@@ -5,14 +5,11 @@ void Harl::complain( std::string level ) {
 	size_t			currentIndex = 0;
 	const size_t	functionListSize = 4;
 	std::string		functionNames[] = { "DEBUG", "INFO", "WARNING", "ERROR" };
-	void			(Harl::*functionList[])() = { &Harl::debug, &Harl::info, &Harl::warning, &Harl::error };
+	void			(Harl::*functionList[])() = { &Harl::debug, &Harl::info, &Harl::warning, &Harl::error, &Harl::notFound };
 
 	while (currentIndex < functionListSize && level != functionNames[currentIndex]) { currentIndex++; }
 
-	if (currentIndex == functionListSize)
-		std::cout << std::endl << "[ Probably complaining about insignificant problems ]" << std::endl;
-	else
-		(this->*functionList[currentIndex])();
+	(this->*functionList[currentIndex])();
 }
 
 // Private member functions
@@ -46,4 +43,8 @@ void Harl::error( void ) {
 	std::cout << "This is unacceptable! I want to speak to the manager now." << std::endl;
 	std::cout << "\033[0m";
 	return ;
+}
+
+void Harl::notFound( void ) {
+	std::cout << std::endl << "[ Probably complaining about insignificant problems ]" << std::endl;
 }

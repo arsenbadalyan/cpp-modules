@@ -1,8 +1,5 @@
 #include "reader.hpp"
 
-// Utils
-std::string fromCharToString(char *str);
-
 int main( int ac, char** av )
 {
 	if (ac != 4)

@@ -11,6 +11,7 @@ class Harl {
 		void info(void);
 		void warning(void);
 		void error(void);
+		void notFound(void);
 };
 
 #endif  //!__HARL__H__

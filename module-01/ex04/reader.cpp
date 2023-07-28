@@ -1,13 +1,17 @@
 #include "reader.hpp"
 
 void read_controller(char *fName, char *find, char *replace) {
-	std::string filename = fromCharToString(fName);
-	std::string findStr = fromCharToString(find);
-	std::string replaceStr = fromCharToString(replace);
+	std::string filename(fName);
+	std::string findStr(find);
+	std::string replaceStr(replace);
 	std::ifstream inputFile(filename);
+	
+	if (!(inputFile.is_open()))
+		catch_exception(E_WRFLE);
+	
 	std::ofstream outputFile(filename.append(".replace"));
 
-	if (inputFile.is_open() && outputFile.is_open())
+	if (outputFile.is_open())
 		read_file(inputFile, outputFile, findStr, replaceStr);
 	else
 		catch_exception(E_WRFLE);
