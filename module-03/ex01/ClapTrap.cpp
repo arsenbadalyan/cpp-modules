@@ -3,13 +3,13 @@
 // -------------- ctor, dtor
 ClapTrap::ClapTrap( void )
 {
-    std::cout << "ClapTrap Default ctor called!" << std::endl;
+    std::cout << "Default ctor called!" << std::endl;
     *this = ClapTrap("unnamed");
 }
 
 ClapTrap::ClapTrap( std::string name )
 {
-    std::cout << "ClapTrap Argument ctor called!" << std::endl;
+    std::cout << "Argument ctor called!" << std::endl;
     this->m_name = name;
     this->m_demage = 0;
     this->m_energy = 10;
@@ -17,19 +17,19 @@ ClapTrap::ClapTrap( std::string name )
 }
 
 ClapTrap::~ClapTrap() {
-    std::cout << "ClapTrap Dtor called!" << std::endl;
+    std::cout << "Dtor called!" << std::endl;
 }
 
 ClapTrap::ClapTrap( const ClapTrap& copy )
 {
-    std::cout << "ClapTrap Copy ctor called!" << std::endl;
+    std::cout << "Copy ctor called!" << std::endl;
     *this = copy;
 }
 
 // ------------------------- overloaded operators
 ClapTrap& ClapTrap::operator=( const ClapTrap& rhs )
 {
-    std::cout << "ClapTrap Equal operator called!" << std::endl;
+    std::cout << "Equal operator called!" << std::endl;
     this->m_name = rhs.m_name;
     this->m_health = rhs.m_health;
     this->m_energy = rhs.m_energy;

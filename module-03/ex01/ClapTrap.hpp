@@ -35,14 +35,15 @@ class ClapTrap {
         unsigned int getDemage( void );
         void setDemage( unsigned int );
 
+    protected:
+        bool _is_enough_health( void );
+        bool _is_enough_energy( void );
+
     private:
         std::string m_name;
         unsigned int m_health;
         unsigned int m_energy;
         unsigned int m_demage;
-
-        bool _is_enough_health( void );
-        bool _is_enough_energy( void );
 
         void _subtractHealth( unsigned int );
 };
