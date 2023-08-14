@@ -6,23 +6,24 @@
 #include "ClapTrap.hpp"
 
 class ScavTrap : public ClapTrap {
-    
     public:
-        
-        // ctor, dtor
+
+        // ctors
         ScavTrap( void );
         ScavTrap( const ScavTrap& );
-        ScavTrap( std::string );
-        ~ScavTrap();
+        ScavTrap( const std::string& );
+
+        // dtor
+        virtual ~ScavTrap();
 
         // overloaded operators
         ScavTrap& operator=( const ScavTrap& );
 
-        // overrided member functions
+        // override functions
         void attack( const std::string& );
 
-        // member functions
-        void guardGate();
+        // member function
+        void guardGate( void );
 };
 
-#endif // !__SCAVTRAP__HPP__
+#endif // !__SCAV_TRAP__HPP__

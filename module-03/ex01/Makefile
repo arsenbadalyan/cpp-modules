@@ -1,5 +1,5 @@
 # Variables
-NAME = SerenaMyLove
+NAME = serenaMyLove
 COMPILER = c++
 CFLAGS = -Wall -Wextra -Werror -std=c++98
 RM = rm -rf
@@ -18,8 +18,13 @@ $(NAME): $(OBJ) Makefile $(LIBS)
 	$(COMPILER) $(CFLAGS) $(OBJ) -o $(NAME)
 	@echo "\nExecutable is - $(NAME)"
 
-%.o: %.cpp
+ifdef MSG
+%.o: %.cpp $(LIBS)
+	$(COMPILER) $(CFLAGS) -c $< -o $@ -D SHOW_DEFAULT_MSG=$(MSG)
+else
+%.o: %.cpp $(LIBS)
 	$(COMPILER) $(CFLAGS) -c $< -o $@
+endif
 
 clean:
 	$(RM) $(OBJ)

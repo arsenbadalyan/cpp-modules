@@ -1,55 +1,63 @@
 #include "ScavTrap.hpp"
+#include "ClapTrap.hpp"
 
-// ------------------
-// ctros, dtor
-ScavTrap::ScavTrap( void )
+// ---------- ctors
+ScavTrap::ScavTrap( void ) : ClapTrap::ClapTrap()
 {
-    std::cout << "ScavTrap Default ctor called!" << std::endl;
-    ScavTrap("unnamed");
-}
-
-ScavTrap::ScavTrap( std::string name ) : ClapTrap::ClapTrap(name)
-{
-    std::cout << "ScavTrap Argument ctor called!" << std::endl;
+    if (SHOW_DEFAULT_MSG)
+        std::cout << "ScavTrap Default ctor called!" << std::endl;
     this->setHealth(100);
     this->setEnergy(50);
-    this->setDemage(20);
+    this->setDamage(20);
 }
 
-ScavTrap::ScavTrap( const ScavTrap& copy ) : ClapTrap::ClapTrap(copy)
+ScavTrap::ScavTrap( const std::string& name ) : ClapTrap::ClapTrap( name )
 {
-    std::cout << "ScavTrap Copy ctor called!" << std::endl;
+    if (SHOW_DEFAULT_MSG)
+        std::cout << "ScavTrap Arguments ctor called!" << std::endl;
+    this->setHealth(100);
+    this->setEnergy(50);
+    this->setDamage(20);
 }
 
+ScavTrap::ScavTrap( const ScavTrap& copy ) : ClapTrap::ClapTrap( copy )
+{
+    if (SHOW_DEFAULT_MSG)
+        std::cout << "ScavTrap Copy ctor called!" << std::endl;
+}
+
+// ---------- dtor
 ScavTrap::~ScavTrap()
 {
-    std::cout << "ScavTrap dtor called!" << std::endl;
+    if (SHOW_DEFAULT_MSG)
+        std::cout << "ScavTrap dtor called!" << std::endl;
 }
 
-// ------------------
-// overloaded operators
-ScavTrap& ScavTrap::operator=( const ScavTrap& copy )
+// ---------- overloaded operators
+ScavTrap& ScavTrap::operator=( const ScavTrap& rhs )
 {
-    ClapTrap::operator=(copy);
+    ClapTrap::operator=(rhs);
 
+    if (SHOW_DEFAULT_MSG)
+        std::cout << "ScavTrap assignment operator called!" << std::endl;
     return (*this);
 }
 
-// ------------------
-// overrided member functions
-void ScavTrap::attack( const std::string& target )
+// ---------- member functions
+void ScavTrap::guardGate( void )
 {
-    if ( this->_is_enough_energy() && this->_is_enough_health() )
-    {
-        std::cout << "ClapTrap " << this->getName() << " attacks " << target << ", causing " << this->getDemage() << " points of damage!" << std::endl;
-        this->setEnergy(this->getEnergy() - 1);
-    }
+    if ( _is_enough_health() )
+        std::cout << this->getName() << " is now in Gate keeper mode." << std::endl;
     return ;
 }
 
-// ------------------
-// member functions
-void ScavTrap::guardGate( void )
+// ---------- override functions
+void ScavTrap::attack( const std::string& target )
 {
-    std::cout << "ScavTrap " << this->getName() << " is now in Gate keeper mode." << std::endl;
+    if ( _is_enough_energy() && _is_enough_health() )
+    {
+        std::cout << "ScavTrap " << this->getName() << " attacks " << target << ", causing " << this->getDamage() << " points of damage!" << std::endl;
+        this->setEnergy(this->getEnergy() - 1);
+    }
+    return ;
 }

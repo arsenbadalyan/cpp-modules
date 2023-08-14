@@ -4,12 +4,15 @@
 
 #include <iostream>
 
+#ifndef SHOW_DEFAULT_MSG
+#define SHOW_DEFAULT_MSG true
+#endif
 class ClapTrap {
 
     public:
         ClapTrap( void );
         ClapTrap( std::string name );
-        ~ClapTrap();
+        virtual ~ClapTrap();
         ClapTrap( const ClapTrap& );
 
         // overloaded operators
@@ -32,18 +35,17 @@ class ClapTrap {
         unsigned int getEnergy( void );
         void setEnergy( unsigned int );
 
-        unsigned int getDemage( void );
-        void setDemage( unsigned int );
+        unsigned int getDamage( void );
+        void setDamage( unsigned int );
 
     protected:
-        bool _is_enough_health( void );
-        bool _is_enough_energy( void );
-
-    private:
         std::string m_name;
         unsigned int m_health;
         unsigned int m_energy;
-        unsigned int m_demage;
+        unsigned int m_damage;
+
+        bool _is_enough_health( void );
+        bool _is_enough_energy( void );
 
         void _subtractHealth( unsigned int );
 };

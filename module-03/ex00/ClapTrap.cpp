@@ -3,37 +3,44 @@
 // -------------- ctor, dtor
 ClapTrap::ClapTrap( void )
 {
-    std::cout << "ClapTrap Default ctor called!" << std::endl;
-    *this = ClapTrap("unnamed");
+    if (SHOW_DEFAULT_MSG)
+        std::cout << "ClapTrap Default ctor called!" << std::endl;
+    *this = ClapTrap("unknown");
 }
 
 ClapTrap::ClapTrap( std::string name )
 {
-    std::cout << "ClapTrap Argument ctor called!" << std::endl;
+    if (SHOW_DEFAULT_MSG)
+        std::cout << "ClapTrap Argument ctor called!" << std::endl;
     this->m_name = name;
-    this->m_demage = 0;
+    this->m_damage = 0;
     this->m_energy = 10;
     this->m_health = 10;
 }
 
 ClapTrap::~ClapTrap() {
-    std::cout << "ClapTrap Dtor called!" << std::endl;
+    if (SHOW_DEFAULT_MSG)
+        std::cout << "ClapTrap Dtor called!" << std::endl;
 }
 
 ClapTrap::ClapTrap( const ClapTrap& copy )
 {
-    std::cout << "ClapTrap Copy ctor called!" << std::endl;
+    if (SHOW_DEFAULT_MSG)
+        std::cout << "ClapTrap Copy ctor called!" << std::endl;
     *this = copy;
 }
 
 // ------------------------- overloaded operators
 ClapTrap& ClapTrap::operator=( const ClapTrap& rhs )
 {
-    std::cout << "ClapTrap Equal operator called!" << std::endl;
+    if (SHOW_DEFAULT_MSG)
+        std::cout << "ClapTrap Equal operator called!" << std::endl;
+    if (this == &rhs)
+        return (*this);
     this->m_name = rhs.m_name;
     this->m_health = rhs.m_health;
     this->m_energy = rhs.m_energy;
-    this->m_demage = rhs.m_demage;
+    this->m_damage = rhs.m_damage;
 
     return (*this);
 }
@@ -63,15 +70,15 @@ void ClapTrap::setHealth( unsigned int health )
     this->m_health = health;
 }
 
-// ---- demage
-unsigned int ClapTrap::getDemage( void )
+// ---- damage
+unsigned int ClapTrap::getDamage( void )
 {
-    return (this->m_demage);
+    return (this->m_damage);
 }
 
-void ClapTrap::setDemage( unsigned int demage )
+void ClapTrap::setDamage( unsigned int damage )
 {
-    this->m_demage = demage;
+    this->m_damage = damage;
 }
 
 // ---- energy
@@ -91,7 +98,7 @@ void ClapTrap::attack( const std::string& target )
 {
     if ( _is_enough_energy() && _is_enough_health() )
     {
-        std::cout << "ClapTrap " << this->getName() << " attacks " << target << ", causing " << this->getDemage() << " points of damage!" << std::endl;
+        std::cout << "ClapTrap " << this->getName() << " attacks " << target << ", causing " << this->getDamage() << " points of damage!" << std::endl;
         this->setEnergy(this->getEnergy() - 1);
     }
     return ;
@@ -103,7 +110,6 @@ void ClapTrap::takeDamage( unsigned int amount )
     {
         std::cout << "Claptrap " << this->getName() << " take demaged of " << amount << " amount!" << std::endl;
         this->_subtractHealth(amount);
-        this->setEnergy(this->getEnergy() - 1);
     }
     return ;
 }
@@ -124,7 +130,7 @@ void ClapTrap::printData( void )
     std::cout << "Name: " << this->getName() << std::endl;
     std::cout << "Health: " << this->getHealth() << std::endl;
     std::cout << "Energy: " << this->getEnergy() << std::endl;
-    std::cout << "Demage: " << this->getDemage() << std::endl;
+    std::cout << "Damage: " << this->getDamage() << std::endl;
 }
 
 // ------------------------------
