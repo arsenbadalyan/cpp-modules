@@ -5,7 +5,7 @@
 #include <iostream>
 #include "ClapTrap.hpp"
 
-class ScavTrap : public ClapTrap {
+class ScavTrap : virtual public ClapTrap {
     public:
 
         // ctors
@@ -14,7 +14,7 @@ class ScavTrap : public ClapTrap {
         ScavTrap( const std::string& );
 
         // dtor
-        ~ScavTrap();
+        virtual ~ScavTrap();
 
         // overloaded operators
         ScavTrap& operator=( const ScavTrap& );

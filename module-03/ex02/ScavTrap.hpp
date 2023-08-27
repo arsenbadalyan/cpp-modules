@@ -14,7 +14,7 @@ class ScavTrap : public ClapTrap {
         ScavTrap( const std::string& );
 
         // dtor
-        virtual ~ScavTrap();
+        ~ScavTrap();
 
         // overloaded operators
         ScavTrap& operator=( const ScavTrap& );

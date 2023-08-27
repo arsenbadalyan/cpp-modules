@@ -5,7 +5,7 @@
 #include <iostream>
 #include "ClapTrap.hpp"
 
-class FragTrap : public ClapTrap {
+class FragTrap : virtual public ClapTrap {
 
     public:
         // ctors
@@ -14,7 +14,7 @@ class FragTrap : public ClapTrap {
         FragTrap( const FragTrap& );
 
         // dtor
-        ~FragTrap();
+        virtual ~FragTrap();
 
         // overloaded operators
         FragTrap& operator=( const FragTrap& );

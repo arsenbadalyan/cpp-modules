@@ -140,7 +140,7 @@ bool ClapTrap::_is_enough_energy( void )
 {
     if ( this->getEnergy() == 0 )
     {
-        std::cout << "ClapTrap " << this->getName() << " don't have enough energy!" << std::endl;
+        std::cout << this->getName() << " don't have enough energy!" << std::endl;
         return (false);
     }
     return (true);
@@ -150,7 +150,7 @@ bool ClapTrap::_is_enough_health( void )
 {
     if ( this->getHealth() == 0 )
     {
-        std::cout << "ClapTrap " << this->getName() << " don't have enough health!" << std::endl;
+        std::cout << this->getName() << " don't have enough health!" << std::endl;
         return (false);
     }
     return (true);
