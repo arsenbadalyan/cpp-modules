@@ -10,47 +10,39 @@
 
 int main( int, char** ) {
 
-    Animal *obj1 = new Animal();
-    obj1->setType("yey");
-    Animal obj2;
+    const Animal* meta = new Animal();
+    const Animal* dog = new Dog();
+    const Animal* cat = new Cat();
+    std::cout << dog->getType() << " is cat type" << std::endl;
+    std::cout << cat->getType() << " is dog type" << std::endl;
 
-    obj2 = *(new Animal(obj1));
-
-    std::cout << obj1->getType();
-    // std::cout << obj2->getType();
-    // const Animal* meta = new Animal();
-    // const Animal* dog = new Dog();
-    // const Animal* cat = new Cat();
-    // std::cout << dog->getType() << " is cat type" << std::endl;
-    // std::cout << cat->getType() << " is dog type" << std::endl;
-
-    // dog->makeSound(); //will output the cat sound!
-    // cat->makeSound();
+    dog->makeSound(); //will output the cat sound!
+    cat->makeSound();
         
-    // meta->makeSound();
+    meta->makeSound();
 
-    // std::cout << "------------- Wrong animals below" << std::endl;
+    std::cout << "------------- Wrong animals below" << std::endl;
 
-    // const WrongAnimal* wrongMeta = new WrongAnimal();
-    // const WrongAnimal* wrongCat = new WrongDog();
-    // const WrongAnimal* wrongDog = new WrongCat();
-    // std::cout << wrongCat->getType() << " is cat type" << std::endl;
-    // std::cout << wrongDog->getType() << " is dog type" << std::endl;
+    const WrongAnimal* wrongMeta = new WrongAnimal();
+    const WrongAnimal* wrongCat = new WrongDog();
+    const WrongAnimal* wrongDog = new WrongCat();
+    std::cout << wrongCat->getType() << " is cat type" << std::endl;
+    std::cout << wrongDog->getType() << " is dog type" << std::endl;
 
-    // wrongCat->makeSound();
-    // wrongDog->makeSound();
+    wrongCat->makeSound();
+    wrongDog->makeSound();
 
-    // wrongMeta->makeSound();
+    wrongMeta->makeSound();
 
-    // std::cout << "----------------------------------" << std::endl;
+    std::cout << "----------------------------------" << std::endl;
 
-    // delete meta;
-    // delete dog;
-    // delete cat;
+    delete meta;
+    delete dog;
+    delete cat;
 
-    // delete wrongMeta;
-    // delete wrongCat;
-    // delete wrongDog;
+    delete wrongMeta;
+    delete wrongCat;
+    delete wrongDog;
 
     return (0);
 }
