@@ -15,6 +15,9 @@ class Ice : public AMateria {
 
         Ice& operator=( const Ice& );
 
+        AMateria* clone( void ) const;
+
+        void use( ICharacter const & );
 };
 
 #endif //!__ICE__HPP__

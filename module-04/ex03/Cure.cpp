@@ -1,11 +1,23 @@
-#pragma once
-#ifndef __CURE__HPP__
-#define __CURE__HPP__
+#include "Cure.hpp"
 
-#include <iostream>
+Cure::Cure( void ) : AMateria::AMateria( "cure" ) {}
 
-class Cure {
+Cure::Cure( Cure const & target ) : AMateria::AMateria(target) {
+    Cure::operator=(target);
+}
 
-};
+Cure::~Cure() {}
 
-#endif //!__CURE__HPP__
+Cure& Cure::operator=( Cure const & rhs ) {
+    if (this != &rhs)
+        this->_type = rhs._type;
+    return (*this);
+}
+
+AMateria* Cure::clone( void ) const {
+    return ((AMateria *)(new Cure(*this)));
+}
+
+void Cure::use( ICharacter const & target ) {
+    std::cout << "* heals " << target.getName() << "’s wounds *" << std::endl;
+}

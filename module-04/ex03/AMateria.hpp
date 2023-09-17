@@ -4,17 +4,27 @@
 
 #include <iostream>
 
+#include "ICharacter.hpp"
+
+class ICharacter;
+
 class AMateria {
     protected:
-        const std::string _type;
+        std::string _type;
 
     public:
+        AMateria( void );
         AMateria( std::string const & );
+        AMateria( AMateria const & );
 
-        std::string const & getType() const; //Returns the materia type
+        virtual ~AMateria();
 
-        virtual AMateria* clone() const = 0;
-        // virtual void use(ICharacter&);
+        virtual AMateria& operator=( AMateria const & );
+
+        std::string const & getType( void ) const; //Returns the materia type
+
+        virtual AMateria* clone( void ) const = 0;
+        virtual void use( ICharacter const & );
 };
 
 #endif // !__AMATERIA__HPP__

@@ -15,6 +15,9 @@ class Cure : public AMateria {
 
         Cure& operator=( const Cure& );
 
+        AMateria* clone( void ) const;
+
+        void use( ICharacter const & );
 };
 
 #endif //!__CURE__HPP__
