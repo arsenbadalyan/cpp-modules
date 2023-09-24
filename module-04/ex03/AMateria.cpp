@@ -8,14 +8,6 @@ AMateria::AMateria( AMateria const & target ) {
     *this = target;
 }
 
-AMateria& AMateria::operator=( AMateria const & rhs ) {
-    if (this == &rhs)
-        return (*this);
-    this->_type = rhs._type;
-
-    return (*this);
-}
-
 AMateria::~AMateria() {}
 
 std::string const & AMateria::getType( void ) const {

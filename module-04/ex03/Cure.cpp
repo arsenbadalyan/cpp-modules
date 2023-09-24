@@ -2,9 +2,7 @@
 
 Cure::Cure( void ) : AMateria::AMateria( "cure" ) {}
 
-Cure::Cure( Cure const & target ) : AMateria::AMateria(target) {
-    Cure::operator=(target);
-}
+Cure::Cure( Cure const & target ) : AMateria::AMateria(target._type) { }
 
 Cure::~Cure() {}
 

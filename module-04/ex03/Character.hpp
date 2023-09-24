@@ -10,6 +10,7 @@ class Character : public ICharacter {
     private:
         std::string _name;
         AMateria *_slots[4];
+        AMateria **_floor_slots;
 
     public:
         Character( std::string const & );
@@ -22,8 +23,9 @@ class Character : public ICharacter {
         std::string const & getName() const;
         void equip( AMateria* );
         void unequip( int );
-        void use( int, ICharacter const & );
+        void use( int, ICharacter & );
 
+        void save_materia( AMateria * );
 };
 
 #endif //!__ICHARACTER__HPP__

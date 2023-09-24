@@ -6,7 +6,11 @@
 
 #include "IMateriaSource.hpp"
 
-class MateriaSource {
+class MateriaSource : public IMateriaSource {
+
+    private:
+
+        AMateria *_slots[4];
 
     public:
 

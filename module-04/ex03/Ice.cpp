@@ -1,10 +1,8 @@
 #include "Ice.hpp"
 
-Ice::Ice( void ) : AMateria::AMateria("ice") {}
+Ice::Ice( void ) : AMateria::AMateria( "ice" ) {}
 
-Ice::Ice( Ice const & target ) : AMateria::AMateria(target) {
-    Ice::operator=(target);
-}
+Ice::Ice( Ice const & target ) : AMateria::AMateria(target._type) { }
 
 Ice& Ice::operator=( Ice const & rhs ) {
     if (this != &rhs)
