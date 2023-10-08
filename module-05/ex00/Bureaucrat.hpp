@@ -7,35 +7,41 @@
 class Bureaucrat {
 
     public:
+        Bureaucrat( void );
         Bureaucrat( const std::string &, int );
         Bureaucrat( const Bureaucrat & );
         ~Bureaucrat();
 
         Bureaucrat & operator=( const Bureaucrat & );
 
-
-    public:
-        std::string& getName( void ) const;
+    public: // getters
+        std::string getName( void ) const;
         int getGrade( void ) const;
 
+    public: //setters
+        void setGrade( int );
+
     public:
-        int incrementGrade( void );
-        int decrementGrade( void );
+        void incrementGrade( void );
+        void decrementGrade( void );
+
+    public:
+        static const int MAX_GRADE = 1;
+        static const int MIN_GRADE = 150;
 
     public:
         class GradeTooHighException : public std::exception {
-            private:
-                const std::string& _msg;
             public:
+                const char * what() const throw();
+        };
 
-                GradeTooHighException(const std::string &);
-                ~GradeTooHighException();
-
+        class GradeTooLowException : public std::exception {
+            public:
                 const char * what() const throw();
         };
 
     private:
-        const std::string& _name; 
+        const std::string _name;
         int _grade;
 
 };
