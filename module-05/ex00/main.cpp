@@ -4,16 +4,33 @@
 int main() {
     try {
         Bureaucrat b1("B1", 15);
-        Bureaucrat b2("B2", 150);
-        Bureaucrat b3("B3", 1);
 
-        std::cout << b1.getName() << " " << b1.getGrade() << std::endl;
-        std::cout << b2.getName() << " " << b2.getGrade() << std::endl;
-        // b2.decrementGrade();
-        // b3.incrementGrade();
-        std::cout << b3.getName() << " " << b3.getGrade() << std::endl;
+        std::cout << b1;
+        b1.incrementGrade();
+        b1.incrementGrade();
+        b1.incrementGrade();
+        std::cout << b1;
+        b1.decrementGrade();
+        std::cout << b1;
     } catch( const std::exception& exc ) {
-        std::cout << exc.what();
+        std::cout << "Error: " << exc.what();
+    }
+    try {
+        Bureaucrat b2("B2", 150);
+
+        std::cout << b2;
+        b2.decrementGrade();
+    } catch( const std::exception& exc ) {
+        std::cout << "Error: " << exc.what();
+    }
+    try {
+        Bureaucrat b3("B3", 2);
+
+        std::cout << b3;
+        b3.incrementGrade();
+        b3.incrementGrade();
+    } catch( const std::exception& exc ) {
+        std::cout << "Error: " << exc.what();
     }
     return (0);
 }

@@ -21,25 +21,25 @@ Bureaucrat& Bureaucrat::operator= ( const Bureaucrat& rhs ) {
     return (*this);
 }
 
-std::string Bureaucrat::getName( void ) const {
+std::string Bureaucrat::getName ( void ) const {
     return (this->_name);
 }
 
-int Bureaucrat::getGrade( void ) const {
+int Bureaucrat::getGrade ( void ) const {
     return (this->_grade);
 }
 
-void Bureaucrat::incrementGrade( void ) {
+void Bureaucrat::incrementGrade ( void ) {
     int newGrade = this->getGrade() - 1;
     this->setGrade(newGrade);
 }
 
-void Bureaucrat::decrementGrade( void ) {
+void Bureaucrat::decrementGrade ( void ) {
     int newGrade = this->getGrade() + 1;
     this->setGrade(newGrade);
 }
 
-void Bureaucrat::setGrade( int grade ) {
+void Bureaucrat::setGrade ( int grade ) {
     if (grade < Bureaucrat::MAX_GRADE)
         throw Bureaucrat::GradeTooHighException();
     if (grade > Bureaucrat::MIN_GRADE)
@@ -47,12 +47,17 @@ void Bureaucrat::setGrade( int grade ) {
     this->_grade = grade;
 }
 
+std::ostream& operator<< ( std::ostream & os, const Bureaucrat & target) {
+    os << target.getName() << ", bureaucrat grade " << target.getGrade() << "." << std::endl;
+    return (os);
+}
+
 // Throwing Exceptions --------------------------------
 
 const char * Bureaucrat::GradeTooHighException::what ( void ) const throw() {
-    return (std::runtime_error("Grade is too hight!").what());
+    return (this->_errMsg.c_str());
 }
 
 const char * Bureaucrat::GradeTooLowException::what ( void ) const throw() {
-    return (std::runtime_error("Grade is too low!").what());
+    return (this->_errMsg.c_str());
 }

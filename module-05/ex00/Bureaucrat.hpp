@@ -12,6 +12,7 @@ class Bureaucrat {
         Bureaucrat( const Bureaucrat & );
         ~Bureaucrat();
 
+    public:
         Bureaucrat & operator=( const Bureaucrat & );
 
     public: // getters
@@ -30,12 +31,22 @@ class Bureaucrat {
         static const int MIN_GRADE = 150;
 
     public:
-        class GradeTooHighException : public std::exception {
+        class GradeTooLowException : public std::exception {
+            private:
+                std::string _errMsg;
+            public:
+                GradeTooLowException() : _errMsg("Grade is too low!\n") {}
+                ~GradeTooLowException() throw() {};
             public:
                 const char * what() const throw();
         };
 
-        class GradeTooLowException : public std::exception {
+        class GradeTooHighException : public std::exception {
+            private:
+                std::string _errMsg;
+            public:
+                GradeTooHighException() : _errMsg("Grade is too high!\n") {}
+                ~GradeTooHighException() throw() {};
             public:
                 const char * what() const throw();
         };
@@ -45,5 +56,7 @@ class Bureaucrat {
         int _grade;
 
 };
+
+std::ostream& operator<<( std::ostream &, const Bureaucrat & );
 
 #endif // !__BUREAUCRAT__HPP__
