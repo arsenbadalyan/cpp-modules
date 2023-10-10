@@ -1,0 +1,72 @@
+#include "Bureaucrat.hpp"
+
+Bureaucrat::Bureaucrat ( void ) : _name("no-name"), _grade(Bureaucrat::MIN_GRADE) {}
+
+Bureaucrat::Bureaucrat ( const std::string& name, int grade ) : _name(name) {
+    this->setGrade(grade);
+}
+
+Bureaucrat::Bureaucrat ( const Bureaucrat& target ) : _name(target._name) {
+    this->_grade = target._grade;
+}
+
+Bureaucrat::~Bureaucrat () {}
+
+Bureaucrat& Bureaucrat::operator= ( const Bureaucrat& rhs ) {
+    if (this == &rhs)
+        return (*this);
+    
+    this->_grade = rhs._grade;
+
+    return (*this);
+}
+
+std::string Bureaucrat::getName ( void ) const {
+    return (this->_name);
+}
+
+int Bureaucrat::getGrade ( void ) const {
+    return (this->_grade);
+}
+
+void Bureaucrat::incrementGrade ( void ) {
+    int newGrade = this->getGrade() - 1;
+    this->setGrade(newGrade);
+}
+
+void Bureaucrat::decrementGrade ( void ) {
+    int newGrade = this->getGrade() + 1;
+    this->setGrade(newGrade);
+}
+
+void Bureaucrat::signForm ( Form & form ) const {
+    try {
+        form.beSigned(*this);
+        std::cout << this->getName() << " signed " << form.getName() << " form" << std::endl;
+    } catch (std::exception & reason) {
+        std::cout << this->getName() << " couldn’t sign " << form.getName() << " form because " << reason.what() << std::endl;
+    }
+}
+
+void Bureaucrat::setGrade ( int grade ) {
+    if (grade < Bureaucrat::MAX_GRADE)
+        throw Bureaucrat::GradeTooHighException();
+    if (grade > Bureaucrat::MIN_GRADE)
+        throw Bureaucrat::GradeTooLowException();
+    this->_grade = grade;
+}
+
+std::ostream& operator<< ( std::ostream & os, const Bureaucrat & target) {
+    os << target.getName() << ", bureaucrat grade " << target.getGrade() << "." << std::endl;
+    return (os);
+}
+
+// Throwing Exceptions --------------------------------
+
+const char * Bureaucrat::GradeTooHighException::what ( void ) const throw() {
+    return (this->_errMsg.c_str());
+}
+
+const char * Bureaucrat::GradeTooLowException::what ( void ) const throw() {
+    return (this->_errMsg.c_str());
+}
