@@ -61,14 +61,29 @@ void identify(Base& p) {
 }
 
 int main( int, char ** ) {
-    
-    try {
-        Base * someRandomPtr = generate();
-        identify(*someRandomPtr);
-        identify(someRandomPtr);
-    } catch ( std::exception & exc ) {
-        std::cout << "Exception thrown reason is: " << exc.what() << std::endl;
-    }
+    Base* someRandomPtr = generate();
 
+    std::cout << "----------Random---------" << std::endl;
+    identify(someRandomPtr);
+    identify(*someRandomPtr);
+
+    {
+        Base* a = new A();
+        std::cout << "------------A------------" << std::endl;
+        identify(a);
+        identify(*a);
+    }
+    {
+        Base* b = new B();
+        std::cout << "------------B------------" << std::endl;
+        identify(b);
+        identify(*b);
+    }
+    {
+        Base* c = new C();
+        std::cout << "------------C------------" << std::endl;
+        identify(c);
+        identify(*c);
+    }
     return (0);
 }
