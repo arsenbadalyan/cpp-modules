@@ -3,6 +3,7 @@
 #define SERIALIZER__HPP__
 
 #include <iostream>
+#include <stdint.h>
 #include "Data.hpp"
 
 class Serializer {
