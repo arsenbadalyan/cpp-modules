@@ -10,18 +10,13 @@ class Array {
     public:
         Array( void )
         {
-            this->list = new T[0];
+            this->list = NULL;
             this->length = 0;
         }
         Array( unsigned int n )
         {
-            T *temp = new T();
             this->list = new T[n];
-            for (unsigned int i = 0; i < n; i++)
-                this->list[i] = *temp;
             this->length = n;
-
-            delete temp;
         }
         Array( const Array<T>& copy )
         {
@@ -31,20 +26,24 @@ class Array {
         }
         ~Array()
         {
-            if (*(this->list))
+            if (this->list)
                 delete[] this->list;
         }
 
     public:
         Array<T>& operator=( const Array<T>& rhs )
         {
-            if (this->list)
+            if (this->list) {
                 delete[] this->list;
+                this->list = NULL;
+            }
 
-            this->list = new T[rhs.size()];
-            for (unsigned int i = 0; i < this->length; i++)
+            unsigned int rhsSize = rhs.size();
+
+            this->list = new T[rhsSize];
+            for (unsigned int i = 0; i < rhsSize; i++)
                 this->list[i] = rhs.list[i];
-            this->length = rhs.length;
+            this->length = rhsSize;
 
             return (*this);
         }
@@ -56,6 +55,12 @@ class Array {
             return (this->list[index]);
         }
 
+        const T& operator[]( unsigned int index ) const
+        {
+            if (index >= this->size())
+                throw std::runtime_error("Index is out of bounds!");
+            return (this->list[index]);
+        }
     public:
         unsigned int size( void ) const
         {
@@ -66,12 +71,5 @@ class Array {
         T* list;
         unsigned int length;
 };
-
-template<typename T>
-std::ostream& operator<<( std::ostream & os, const T& item )
-{
-    os << item;
-    return (os);
-}
 
 #endif // !ARRAY__HPP__

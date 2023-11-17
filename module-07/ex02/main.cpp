@@ -8,10 +8,9 @@ int main( int, char ** )
 
     for (unsigned int i = 0; i < size; i++)
     {
-        std::cout << i << std::endl;
-        numbers[i] = i;
-        std::cout << numbers[i] << std::endl;
+        numbers[i] = (i + (i * 2)) / 2;
+        std::cout << "array[" << i << "] = " << numbers[i] << std::endl;
     }
-    std::cout << numbers;
+
     return (0);
 }
