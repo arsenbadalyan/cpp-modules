@@ -18,11 +18,11 @@ class Array {
             this->list = new T[n];
             this->length = n;
         }
-        Array( const Array<T>& copy )
+        Array( const Array<T>& copy ) : list(NULL)
         {
             if (this == &copy)
                 return ;
-            (*this) = (*copy);
+            (*this) = copy;
         }
         ~Array()
         {
@@ -33,6 +33,9 @@ class Array {
     public:
         Array<T>& operator=( const Array<T>& rhs )
         {
+            if (this == &rhs)
+                return (*this);
+
             if (this->list) {
                 delete[] this->list;
                 this->list = NULL;
