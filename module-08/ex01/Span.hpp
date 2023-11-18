@@ -5,6 +5,7 @@
 #include <iostream>
 #include <algorithm>
 #include <list>
+#include <set>
 
 class Span {
 
@@ -19,8 +20,8 @@ class Span {
     public:
         void addNumber( const int number );
         void fill( unsigned int fillSize );
-        int shortestSpan( void ) const;
-        int longestSpan( void ) const;
+        unsigned int shortestSpan( void ) const;
+        unsigned int longestSpan( void ) const;
 
     private:
         Span( void ) {}
