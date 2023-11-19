@@ -38,25 +38,22 @@ void identify(Base* p) {
 void identify(Base& p) {
 
     try {
-        (void)dynamic_cast<A*>(&p);
-    } catch (...) {
+        (void)dynamic_cast<A&>(p);
         std::cout << "A" << std::endl;
         return ;
-    }
+    } catch (...) {}
 
     try {
-        (void)dynamic_cast<B*>(&p);
-    } catch (...) {
+        (void)dynamic_cast<B&>(p);
         std::cout << "B" << std::endl;
         return ;
-    }
+    } catch (...) {}
 
     try {
-        (void)dynamic_cast<C*>(&p);
-    } catch (...) {
+        (void)dynamic_cast<C&>(p);
         std::cout << "C" << std::endl;
         return ;
-    }
+    } catch (...) {}
 
 }
 
@@ -66,24 +63,28 @@ int main( int, char ** ) {
     std::cout << "----------Random---------" << std::endl;
     identify(someRandomPtr);
     identify(*someRandomPtr);
+    delete someRandomPtr;
 
     {
         Base* a = new A();
         std::cout << "------------A------------" << std::endl;
         identify(a);
         identify(*a);
+        delete a;
     }
     {
         Base* b = new B();
         std::cout << "------------B------------" << std::endl;
         identify(b);
         identify(*b);
+        delete b;
     }
     {
         Base* c = new C();
         std::cout << "------------C------------" << std::endl;
         identify(c);
         identify(*c);
+        delete c;
     }
     return (0);
 }
