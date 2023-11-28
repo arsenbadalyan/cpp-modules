@@ -5,17 +5,17 @@ const std::string BitcoinExchange::DB_DATE_COL_NAME = "date";
 const std::string BitcoinExchange::DB_EXCHANGE_COL_NAME = "exchange_rate";
 const int BitcoinExchange::MONTH_MAX_DAY[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 db_map BitcoinExchange::DB_COURSES_MAP;
+const std::string BitcoinExchange::INPUT_FIRST_COL_NAME = "date";
+const std::string BitcoinExchange::INPUT_SECOND_COL_NAME = "value";
 
-
-void BitcoinExchange::validateDB( void )
-{
-    std::fstream DB;
+void BitcoinExchange::validateDB( void ) {
+    std::ifstream DB;
 
     DB.open(BitcoinExchange::DB_NAME);
 
     if (!DB)
         throw std::runtime_error(ERR_UNAVAILABLE_DB);
-    
+
     std::string fileContent;
     std::string btcCourseKey, btcCourseValue;
     size_t commaPos;
@@ -49,12 +49,80 @@ void BitcoinExchange::validateDB( void )
         }
     }
 
-    if (isEmpty)
+    if (isEmpty || BitcoinExchange::DB_COURSES_MAP.begin() == BitcoinExchange::DB_COURSES_MAP.end())
         throw std::runtime_error(ERR_EMPTY_DB);
 }
 
-bool BitcoinExchange::isValidDate( const std::string & date )
-{
+void BitcoinExchange::executeInput( char * inputFile ) {
+    const std::string fileName(inputFile);
+    std::ifstream fileReader(fileName);
+
+    if (!fileReader)
+        throw std::runtime_error(ERR_INVALID_INPUT_FILE);
+
+    std::string fileContent, date, course;
+    string_vector inputLine;
+    string_vector::iterator inputLineIt;
+    char delimiter = '|';
+
+    std::getline(fileReader, fileContent);
+    inputLine = BitcoinExchange::split(fileContent, delimiter);
+    inputLineIt = inputLine.begin();
+
+    if ((std::distance(inputLineIt, inputLine.end()) == 2)
+        && BitcoinExchange::trimWhitespaces(*inputLineIt) == BitcoinExchange::INPUT_FIRST_COL_NAME
+        && BitcoinExchange::trimWhitespaces(*(++inputLineIt)) == BitcoinExchange::INPUT_SECOND_COL_NAME)
+        std::getline(fileReader, fileContent);
+
+    while (fileReader) {
+
+        if (!BitcoinExchange::trimWhitespaces(fileContent).length()) {
+            std::getline(fileReader, fileContent);
+            continue ;
+        }
+
+        inputLine = BitcoinExchange::split(fileContent, delimiter);
+        inputLineIt = inputLine.begin();
+
+        try {
+            if (std::distance(inputLineIt, inputLine.end()) != 2)
+                throw std::runtime_error(ERR_BAD_INPUT + fileContent);
+
+            date = BitcoinExchange::trimWhitespaces(*inputLineIt);
+            course = BitcoinExchange::trimWhitespaces(*(++inputLineIt));
+
+            if (!BitcoinExchange::isValidDate(date))
+                throw std::runtime_error(ERR_BAD_INPUT + fileContent);
+
+            BitcoinExchange::isValidAndInBoundsNumber(course, false);
+            BitcoinExchange::calculateCourse(date, course);
+        } catch (const std::exception & exc) {
+            std::cout << "Error: " << exc.what() << std::endl;
+        }
+
+        std::getline(fileReader, fileContent);
+    }
+}
+
+void BitcoinExchange::calculateCourse( const std::string & date, const std::string & course ) {
+    db_map::iterator target;
+    db_map::iterator db_start = BitcoinExchange::DB_COURSES_MAP.begin();
+    db_map::iterator db_end = BitcoinExchange::DB_COURSES_MAP.end();
+    db_map::iterator near_bound = BitcoinExchange::DB_COURSES_MAP.lower_bound(date);
+
+    if (near_bound == db_end)
+        target = db_end--;
+    else if (near_bound == db_start)
+        target = db_start;
+    else
+        target = near_bound--;
+    
+    const double result = std::strtod(course.c_str(), NULL) * target->second;
+
+    std::cout << date << " => " << course << " = " << result << std::endl;
+}
+
+bool BitcoinExchange::isValidDate( const std::string & date ) {
     string_vector datePart;
     string_vector::iterator dateIt;
     int month;
@@ -102,7 +170,7 @@ bool BitcoinExchange::isValidDate( const std::string & date )
     return (true);
 }
 
-string_vector BitcoinExchange::split(const std::string& str, char delimiter) {
+string_vector BitcoinExchange::split( const std::string & str, char delimiter ) {
     string_vector result;
     size_t start = 0;
     size_t end = str.find(delimiter);
@@ -117,10 +185,30 @@ string_vector BitcoinExchange::split(const std::string& str, char delimiter) {
     return result;
 }
 
-bool BitcoinExchange::isOnlyDigit( const std::string & str, bool checkDot )
-{
+std::string BitcoinExchange::trimWhitespaces( std::string & str ) {
+    std::string::iterator start = str.begin();
+    std::string::iterator end = str.end();
+
+    while (start != end && std::isspace(*start))
+        start++;
+
+    if (start == end)
+        return (std::string());
+
+    end--;
+
+    while (std::isspace(*end))
+        end--;
+
+    return std::string(start, end + 1);
+}
+
+bool BitcoinExchange::isOnlyDigit( const std::string & str, bool checkDot ) {
     size_t idx = 0;
     bool hasAlreadyDot = false;
+
+    if (str[idx] && (str[idx] == '+' || str[idx] == '-') && str[idx + 1])
+        idx++;
 
     while (str[idx]) {
         if (!std::isdigit(str[idx])) {
@@ -139,22 +227,25 @@ bool BitcoinExchange::isOnlyDigit( const std::string & str, bool checkDot )
     return (true);
 }
 
-bool BitcoinExchange::isLeapYear( int year )
-{
+bool BitcoinExchange::isLeapYear( int year ) {
     return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
 }
 
-bool BitcoinExchange::isValidAndInBoundsNumber( const std::string & source, bool isDBCol )
-{
+bool BitcoinExchange::isValidAndInBoundsNumber( const std::string & source, bool isDBCol ) {
     if (BitcoinExchange::isOnlyDigit(source, true)) {
         double num = std::strtod(source.c_str(), NULL);
 
         if (isDBCol && num >= 0) 
             return (true);
 
-        if (!isDBCol && num >= BitcoinExchange::MIN_BOUND && num <= BitcoinExchange::MAX_BOUND)
-            return (true);
-
+        if (!isDBCol) {
+            if (num >= BitcoinExchange::MIN_BOUND && num <= BitcoinExchange::MAX_BOUND)
+                return (true);
+            else if (num < BitcoinExchange::MIN_BOUND)
+                throw std::runtime_error(ERR_NEG_NUM);
+            else if (num > BitcoinExchange::MAX_BOUND)
+                throw std::runtime_error(ERR_LARGE_NUM);
+        }
     }
 
     return (false);
