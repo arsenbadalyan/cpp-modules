@@ -37,7 +37,7 @@ void BitcoinExchange::validateDB( void ) {
 
         if (commaPos == std::string::npos)
             throw std::runtime_error(ERR_INVALID_DB);
-        
+
         btcCourseKey = fileContent.substr(0, commaPos);
         btcCourseValue = fileContent.substr(commaPos + 1, fileContent.length());
         if (BitcoinExchange::isValidDate(btcCourseKey)
@@ -107,15 +107,11 @@ void BitcoinExchange::executeInput( char * inputFile ) {
 void BitcoinExchange::calculateCourse( const std::string & date, const std::string & course ) {
     db_map::iterator target;
     db_map::iterator db_start = BitcoinExchange::DB_COURSES_MAP.begin();
-    db_map::iterator db_end = BitcoinExchange::DB_COURSES_MAP.end();
     db_map::iterator near_bound = BitcoinExchange::DB_COURSES_MAP.lower_bound(date);
 
-    if (near_bound == db_end)
-        target = db_end--;
-    else if (near_bound == db_start)
-        target = db_start;
-    else
-        target = near_bound--;
+    target = near_bound;
+    if (near_bound != db_start)
+        target = --near_bound;
     
     const double result = std::strtod(course.c_str(), NULL) * target->second;
 
