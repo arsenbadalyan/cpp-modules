@@ -7,6 +7,8 @@
 #include <map>
 #include <cstring>
 #include <algorithm>
+#include <string>
+#include <vector>
 
 #define ERR_WRONG_ARG "Argument list must contain only input file!"
 #define ERR_INVALID_INPUT_FILE "Input file is invalid please make sure that file exist or you have enough permissions"
