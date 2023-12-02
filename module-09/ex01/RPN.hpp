@@ -31,10 +31,12 @@ class RPN {
 
 
     private:
-        RPN( void ) {}
-        ~RPN() {}
+        RPN( void );
         RPN( const RPN& );
-        void operator=( const RPN& ) {}
+        ~RPN();
+
+    private:
+        void operator=( const RPN& );
 
 };
 

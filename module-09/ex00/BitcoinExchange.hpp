@@ -54,12 +54,12 @@ class BitcoinExchange {
         static std::string trimWhitespaces( std::string & str );
 
     private:
-        BitcoinExchange( void ) {}
-        BitcoinExchange( const BitcoinExchange & ) {}
-        ~BitcoinExchange() {}
+        BitcoinExchange( void );
+        BitcoinExchange( const BitcoinExchange & );
+        ~BitcoinExchange();
 
     private:
-        void operator=( const BitcoinExchange & ) {}
+        void operator=( const BitcoinExchange & );
 
 };
 

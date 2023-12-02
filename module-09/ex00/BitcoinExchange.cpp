@@ -8,6 +8,11 @@ db_map BitcoinExchange::DB_COURSES_MAP;
 const std::string BitcoinExchange::INPUT_FIRST_COL_NAME = "date";
 const std::string BitcoinExchange::INPUT_SECOND_COL_NAME = "value";
 
+BitcoinExchange::BitcoinExchange( void ) {}
+BitcoinExchange::BitcoinExchange( const BitcoinExchange & ) {}
+BitcoinExchange::~BitcoinExchange() {}
+void BitcoinExchange::operator=( const BitcoinExchange & ) {}
+
 void BitcoinExchange::validateDB( void ) {
     std::ifstream DB;
 

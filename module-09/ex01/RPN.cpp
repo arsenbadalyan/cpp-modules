@@ -7,6 +7,11 @@ double RPN::minus( double rvalue, double lvalue ) { return (lvalue - rvalue); }
 double RPN::divide( double rvalue, double lvalue ) { if (rvalue == 0) throw std::runtime_error(ERR_ZERO_EXC); return (lvalue / rvalue); }
 double RPN::multiply( double rvalue, double lvalue ) { return (lvalue * rvalue); }
 
+RPN::RPN( void ) {}
+RPN::RPN( const RPN & ) {}
+RPN::~RPN() {}
+void RPN::operator=( const RPN & ) {}
+
 void RPN::executeExpression( char * expression ) {
     if (!expression)
         throw std::runtime_error(ERR_WRONG_ARG_LIST);
