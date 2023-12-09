@@ -8,7 +8,7 @@
 #include <cstring>
 #include <algorithm>
 #include <string>
-#include <vector>
+#include <sstream>
 
 #define ERR_WRONG_ARG "Argument list must contain only input file!"
 #define ERR_INVALID_INPUT_FILE "Input file is invalid please make sure that file exist or you have enough permissions"
@@ -22,7 +22,6 @@
 #define ERR_LARGE_NUM "too large a number."
 #define ERR_OUT_OF_BOUNDS_DATE "date is out of bounds"
 
-typedef std::vector<std::string> string_vector;
 typedef std::map<std::string, double> db_map;
 
 class BitcoinExchange {
@@ -50,7 +49,7 @@ class BitcoinExchange {
         static bool isValidDate( const std::string & date );
         static bool isValidAndInBoundsNumber( const std::string & source, bool isDBCol );
         static bool isLeapYear( int year );
-        static string_vector split(const std::string& str, char delimiter);
+        static std::string* split(const std::string& str, char delimiter, size_t & size);
         static std::string trimWhitespaces( std::string & str );
 
     private:
