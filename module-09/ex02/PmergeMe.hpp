@@ -7,7 +7,7 @@
 #include <vector>
 #include <string>
 #include <sstream>
-#include <ctime>
+#include <limits>
 #include <sys/time.h>
 
 #define ERR_INVALID_ARGS "Invalid arguments"
@@ -19,11 +19,11 @@ typedef std::vector<size_t> myVector;
 class PmergeMe {
 
 	public:
-		static void FJMI( char * userInput );
+		static void FJMI( char ** userInput );
 
 	private: // sorting
-		static void sort_deque( void );
-		static void sort_list( void );
+		template <typename Container>
+		static void sort_container( Container & container );
 		template <typename Container>
 		static Container* split_by_sorted_pairs( Container & container, size_t n );
 		template <typename Container>
@@ -34,16 +34,17 @@ class PmergeMe {
 		static void binary_search_insertion( Container & S, size_t num );
 
 	private: // helpers
-		static void fill_arrays_by_user_input( const std::string & userInput );
+		static void fill_arrays_by_user_input( char ** userInput );
 		static bool is_valid_number( const std::string & source ) throw ();
-		static std::string* split( const std::string& str, char delimiter, size_t& size );
-		static void function_execution_time_calc_decorator( void (*foo)(void) );
+		template <typename Container>
+		static void print_container( Container & container, const std::string & addnText );
+		template <typename Container>
+		static void container_print_execution_time_calc_decorator( void (*foo)(Container &), Container & container, const std::string & containerName );
 
 	private:
-		static myDeque unsorted_deque;
-		static myVector unsorted_vector;
-		static myDeque sorted_deque;
-		static myVector sorted_vector;
+		static myDeque temp_deque;
+		static myVector temp_vector;
+		static bool printMode;
 
 	private:
 		PmergeMe( void );

@@ -8,6 +8,7 @@ int main( int argc, char** argv ) {
         RPN::executeExpression(argv[1]);
     } catch( const std::exception & exc ) {
         std::cout << "Error: " << exc.what() << std::endl;
+        return (1);
     }
     return (0);
 }

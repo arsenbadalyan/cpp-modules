@@ -73,10 +73,10 @@ void BitcoinExchange::executeInput( char * inputFile ) {
 	std::getline(fileReader, fileContent);
 	inputLine = BitcoinExchange::split(fileContent, delimiter, splitSize);
 
-	if (splitSize != 2
-		&& BitcoinExchange::trimWhitespaces(inputLine[0]) == BitcoinExchange::INPUT_FIRST_COL_NAME
-		&& BitcoinExchange::trimWhitespaces(inputLine[1]) == BitcoinExchange::INPUT_SECOND_COL_NAME)
-		std::getline(fileReader, fileContent);
+	if (splitSize == 2
+		&& BitcoinExchange::trimWhitespaces(inputLine[0]) == std::string(BitcoinExchange::INPUT_FIRST_COL_NAME)
+		&& BitcoinExchange::trimWhitespaces(inputLine[1]) == std::string(BitcoinExchange::INPUT_SECOND_COL_NAME))
+			std::getline(fileReader, fileContent);
 
 	while (fileReader) {
 
@@ -110,7 +110,7 @@ void BitcoinExchange::executeInput( char * inputFile ) {
 void BitcoinExchange::calculateCourse( const std::string & date, const std::string & course ) {
 	db_map::iterator target;
 	db_map::iterator db_start = BitcoinExchange::DB_COURSES_MAP.begin();
-	db_map::iterator near_bound = BitcoinExchange::DB_COURSES_MAP.lower_bound(date);
+	db_map::iterator near_bound = BitcoinExchange::DB_COURSES_MAP.upper_bound(date);
 
 	target = near_bound;
 	if (near_bound != db_start)
