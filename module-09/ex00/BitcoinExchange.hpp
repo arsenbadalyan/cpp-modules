@@ -14,6 +14,7 @@
 #define ERR_INVALID_INPUT_FILE "Input file is invalid please make sure that file exist or you have enough permissions"
 #define ERR_UNAVAILABLE_DB "DB is unavailable"
 #define ERR_INVALID_DB "Invalid DB"
+#define ERR_INVALID_INPUT "Invalid input file"
 #define ERR_EMPTY_DB "DB is empty"
 #define ERR_INVALID "invalid"
 

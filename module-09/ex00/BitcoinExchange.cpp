@@ -45,7 +45,9 @@ void BitcoinExchange::validateDB( void ) {
 
 		btcCourseKey = fileContent.substr(0, commaPos);
 		btcCourseValue = fileContent.substr(commaPos + 1, fileContent.length());
-		if (BitcoinExchange::isValidDate(btcCourseKey)
+
+		if (btcCourseKey.length() && btcCourseValue.length()
+			&& BitcoinExchange::isValidDate(btcCourseKey)
 			&& BitcoinExchange::isValidAndInBoundsNumber(btcCourseValue, true))
 				BitcoinExchange::DB_COURSES_MAP[btcCourseKey] = std::strtod(btcCourseValue.c_str(), NULL);
 		else {
@@ -66,17 +68,23 @@ void BitcoinExchange::executeInput( char * inputFile ) {
 		throw std::runtime_error(ERR_INVALID_INPUT_FILE);
 
 	std::string fileContent, date, course;
-	std::string* inputLine;
+	std::string* inputLine = NULL;
 	size_t splitSize;
 	char delimiter = '|';
 
 	std::getline(fileReader, fileContent);
 	inputLine = BitcoinExchange::split(fileContent, delimiter, splitSize);
 
-	if (splitSize == 2
-		&& BitcoinExchange::trimWhitespaces(inputLine[0]) == std::string(BitcoinExchange::INPUT_FIRST_COL_NAME)
-		&& BitcoinExchange::trimWhitespaces(inputLine[1]) == std::string(BitcoinExchange::INPUT_SECOND_COL_NAME))
-			std::getline(fileReader, fileContent);
+	if (splitSize != 2
+		|| BitcoinExchange::trimWhitespaces(inputLine[0]) != std::string(BitcoinExchange::INPUT_FIRST_COL_NAME)
+		|| BitcoinExchange::trimWhitespaces(inputLine[1]) != std::string(BitcoinExchange::INPUT_SECOND_COL_NAME)) {
+			delete[] inputLine;
+			throw std::runtime_error(ERR_INVALID_INPUT);
+	}
+
+	std::getline(fileReader, fileContent);
+	delete[] inputLine;
+	inputLine = NULL;
 
 	while (fileReader) {
 
@@ -84,7 +92,7 @@ void BitcoinExchange::executeInput( char * inputFile ) {
 			std::getline(fileReader, fileContent);
 			continue ;
 		}
-	
+
 		inputLine = BitcoinExchange::split(fileContent, delimiter, splitSize);
 
 		try {
@@ -94,7 +102,8 @@ void BitcoinExchange::executeInput( char * inputFile ) {
 			date = BitcoinExchange::trimWhitespaces(inputLine[0]);
 			course = BitcoinExchange::trimWhitespaces(inputLine[1]);
 
-			if (!BitcoinExchange::isValidDate(date)
+			if (!date.length() || !course.size()
+				|| !BitcoinExchange::isValidDate(date)
 				|| !BitcoinExchange::isValidAndInBoundsNumber(course, false))
 				throw std::runtime_error(ERR_BAD_INPUT + fileContent);
 
@@ -104,7 +113,9 @@ void BitcoinExchange::executeInput( char * inputFile ) {
 		}
 
 		std::getline(fileReader, fileContent);
+		delete[] inputLine;
 	}
+
 }
 
 void BitcoinExchange::calculateCourse( const std::string & date, const std::string & course ) {
@@ -122,19 +133,21 @@ void BitcoinExchange::calculateCourse( const std::string & date, const std::stri
 }
 
 bool BitcoinExchange::isValidDate( const std::string & date ) {
-	std::string * datePart;
+	std::string * datePart = NULL;
 	size_t splittedSize, i = 0;
 	int month;
 	int year;
 
 	datePart = BitcoinExchange::split(date, '-', splittedSize);
-
-	if (splittedSize != 3)
+	if (splittedSize != 3) {
+		delete[] datePart;
 		return (false);
+	}
 
 	// DATE YEAR VALIDATION
-	if (!datePart[i].length() || datePart[i].length() > 4
+	if (!datePart[i].length() || datePart[i].length() != 4
 		|| !BitcoinExchange::isOnlyDigit(datePart[i], false)) {
+		delete[] datePart;
 		return (false);
 	}
 	year = std::atoi(datePart[i].c_str());
@@ -146,9 +159,14 @@ bool BitcoinExchange::isValidDate( const std::string & date ) {
 		&& BitcoinExchange::isOnlyDigit(datePart[i], false)) {
 			month = std::atoi(datePart[i].c_str());
 
-			if (month < 1 || month > 12)
+			if (month < 1 || month > 12) {
+				delete[] datePart;
 				return (false);
-		} else return (false);
+			}
+		} else {
+			delete[] datePart;
+			return (false);
+		}
 
 	i++;
 
@@ -157,14 +175,21 @@ bool BitcoinExchange::isValidDate( const std::string & date ) {
 		&& BitcoinExchange::isOnlyDigit(datePart[i], false)) {
 			int day = std::atoi(datePart[i].c_str());
 			int dayLimit = BitcoinExchange::MONTH_MAX_DAY[month - 1];
+
 			if (month == 2 && BitcoinExchange::isLeapYear(year))
 				dayLimit++;
 
-			if (day > dayLimit)
+			if (day > dayLimit) {
+				delete[] datePart;
 				return (false);
+			}
 
-		} else return (false);
+		} else {
+			delete[] datePart;
+			return (false);
+		}
 
+	delete[] datePart;
 	return (true);
 }
 
@@ -175,21 +200,18 @@ std::string* BitcoinExchange::split(const std::string& str, char delimiter, size
 	std::stringstream ss(str);
 
 	while (std::getline(ss, token, delimiter)) {
-		if(!token.empty())
-			size++;
+		size++;
 	}
 
-	std::string *dividedList = new std::string[size];
+	std::string * dividedList = new std::string[size];
 	size_t fillSize = 0;
 
 	ss.clear();
 	ss.seekg(0);
 
 	while (std::getline(ss, token, delimiter)) {
-		if(!token.empty()) {
-			dividedList[fillSize] = token;
-			fillSize++;
-		}
+		dividedList[fillSize] = token;
+		fillSize++;
 	}
 
 	return (dividedList);
