@@ -65,8 +65,9 @@ void RPN::executeExpression( char * expression ) {
 			throw std::runtime_error(ERR_WRONG_EXPR);
 
 		std::cout << "Result: " << result << std::endl;
-	} catch(const std::exception* exc) {
-		throw std::runtime_error(exc->what());
+	} catch(const std::exception & exc) {
+		delete[] exprList;
+		throw std::runtime_error(exc.what());
 	}
 
 	delete[] exprList;

@@ -15,6 +15,7 @@ void BitcoinExchange::operator=( const BitcoinExchange & ) {}
 
 void BitcoinExchange::validateDB( void ) {
 	std::ifstream DB;
+	double tempDBValue = 0;
 
 	DB.open(BitcoinExchange::DB_NAME);
 
@@ -48,12 +49,16 @@ void BitcoinExchange::validateDB( void ) {
 
 		if (btcCourseKey.length() && btcCourseValue.length()
 			&& BitcoinExchange::isValidDate(btcCourseKey)
-			&& BitcoinExchange::isValidAndInBoundsNumber(btcCourseValue, true))
-				BitcoinExchange::DB_COURSES_MAP[btcCourseKey] = std::strtod(btcCourseValue.c_str(), NULL);
-		else {
-			BitcoinExchange::DB_COURSES_MAP.clear();
-			throw std::runtime_error(ERR_INVALID_DB);
-		}
+			&& BitcoinExchange::isValidAndInBoundsNumber(btcCourseValue, true)) {
+				tempDBValue = std::strtod(btcCourseValue.c_str(), NULL);
+
+				if (tempDBValue <= std::numeric_limits<int>::max()) {
+					BitcoinExchange::DB_COURSES_MAP[btcCourseKey] = std::strtod(btcCourseValue.c_str(), NULL);
+					continue ;
+				}
+			}
+		BitcoinExchange::DB_COURSES_MAP.clear();
+		throw std::runtime_error(ERR_INVALID_DB);
 	}
 
 	if (isEmpty || BitcoinExchange::DB_COURSES_MAP.begin() == BitcoinExchange::DB_COURSES_MAP.end())
@@ -155,7 +160,7 @@ bool BitcoinExchange::isValidDate( const std::string & date ) {
 	i++;
 
 	// DATE MONTH VALIDATION
-	if (datePart[i].length() && datePart[i].length() <= 2
+	if (datePart[i].length() == 2
 		&& BitcoinExchange::isOnlyDigit(datePart[i], false)) {
 			month = std::atoi(datePart[i].c_str());
 
@@ -171,7 +176,7 @@ bool BitcoinExchange::isValidDate( const std::string & date ) {
 	i++;
 
 	// DATE DAY VALIDATION
-	if (datePart[i].length() && datePart[i].length() <= 2
+	if (datePart[i].length() == 2
 		&& BitcoinExchange::isOnlyDigit(datePart[i], false)) {
 			int day = std::atoi(datePart[i].c_str());
 			int dayLimit = BitcoinExchange::MONTH_MAX_DAY[month - 1];

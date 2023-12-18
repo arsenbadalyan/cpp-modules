@@ -157,8 +157,11 @@ void PmergeMe::fill_arrays_by_user_input( char ** userInput ) {
 	size_t tempNum;
 
 	for (size_t i = 0; userInput[i]; i++) {
-		if (!PmergeMe::is_valid_number(userInput[i]))
+		if (!PmergeMe::is_valid_number(userInput[i])) {
+			PmergeMe::temp_deque.clear();
+			PmergeMe::temp_vector.clear();
 			throw std::runtime_error(ERR_NAN);
+		}
 
 		tempNum = static_cast<size_t>(std::atoi(userInput[i]));
 
