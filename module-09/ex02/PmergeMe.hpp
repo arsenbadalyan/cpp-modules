@@ -9,6 +9,7 @@
 #include <sstream>
 #include <limits>
 #include <sys/time.h>
+#include <cmath>
 
 #define ERR_INVALID_ARGS "Invalid arguments"
 #define ERR_NAN "Argument list should contain only valid positive integer sequence"
@@ -29,9 +30,11 @@ class PmergeMe {
 		template <typename Container>
 		static void sort_pairs_by_larger( Container * container, size_t n );
 		template <typename Container>
-		static void merge_pairs( Container * pairs, Container & S, size_t n, size_t straggler, bool hasStraggler );
+		static void merge_pairs( Container * pairs, Container & S, size_t n, size_t straggler );
 		template <typename Container>
-		static void binary_search_insertion( Container & S, size_t num );
+		static void binary_search_insertion( Container & S, Container * pend, size_t pendSize );
+		template <typename Container>
+		static void group_pairs( Container * pairs, size_t pairsSize );
 
 	private: // helpers
 		static void fill_arrays_by_user_input( char ** userInput );
@@ -40,6 +43,8 @@ class PmergeMe {
 		static void print_container( Container & container, const std::string & addnText );
 		template <typename Container>
 		static void container_print_execution_time_calc_decorator( void (*foo)(Container &), Container & container, const std::string & containerName );
+		template <typename Container>
+		static void reverse( Container * source, size_t start, size_t end );
 
 	private:
 		static myDeque temp_deque;

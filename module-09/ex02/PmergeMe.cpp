@@ -29,11 +29,9 @@ void PmergeMe::FJMI( char ** userInput ) {
 template <typename Container>
 void PmergeMe::sort_container( Container & container ) {
 	size_t straggler = 0;
-	bool hasStraggler = false;
 
 	if (container.size() % 2) {
 		straggler = *(--container.end());
-		hasStraggler = true;
 		container.pop_back();
 	}
 
@@ -42,7 +40,7 @@ void PmergeMe::sort_container( Container & container ) {
 
 	PmergeMe::sort_pairs_by_larger(pairs, listSize);
 	container.clear();
-	PmergeMe::merge_pairs(pairs, container, listSize, straggler, hasStraggler);
+	PmergeMe::merge_pairs(pairs, container, listSize, straggler);
 
 	delete[] pairs;
 }
@@ -88,36 +86,70 @@ void PmergeMe::sort_pairs_by_larger( Container * container, size_t n ) {
 }
 
 template <typename Container>
-void PmergeMe::merge_pairs( Container * pairs, Container & S, size_t n, size_t straggler, bool hasStraggler ) {
-	Container pend;
+void PmergeMe::merge_pairs( Container * pairs, Container & S, size_t n, size_t straggler ) {
+	size_t maxPendSize = n - 1 + (straggler ? 1 : 0);
+	Container *pend = new Container[maxPendSize];
+	size_t pendIdx = 0, pendQueueIdx = 2;
 
 	for (size_t i = 0; i < n; i++) {
 		if (i == 0) {
 			S.push_back(*(pairs[i].begin()));
-		} else 
-			pend.push_back(*(pairs[i].begin()));
+		} else {
+			pend[pendIdx].push_back(*(pairs[i].begin()));
+			pend[pendIdx++].push_back(pendQueueIdx++);
+		}
 
 		S.push_back(*(--pairs[i].end()));
 	}
 
-	typename Container::iterator pendIt = pend.begin();
-	while (pendIt != pend.end()) {
-		PmergeMe::binary_search_insertion(S, *pendIt);
-		++pendIt;
+	if (straggler) {
+		pend[pendIdx].push_back(straggler);
+		pend[pendIdx++].push_back(pendQueueIdx++);
 	}
 
-	pend.clear();
+	PmergeMe::group_pairs(pend, maxPendSize);
+	PmergeMe::binary_search_insertion(S, pend, maxPendSize);
 
-	if (hasStraggler)
-		PmergeMe::binary_search_insertion(S, straggler);
-
+	delete[] pend;
 }
 
 template <typename Container>
-void PmergeMe::binary_search_insertion( Container & S, size_t num ) {
-	typename Container::iterator it = std::lower_bound(S.begin(), S.end(), num);
+void PmergeMe::group_pairs( Container * pairs, size_t pairsSize ) {
+	size_t powerOfTwo = 1;
+	size_t startIdx = 0;
+	size_t endIdx = 0;
+	size_t groupSize = 0;
 
-	S.insert(it, num);
+	while (endIdx != pairsSize) {
+		startIdx = endIdx;
+		groupSize = pow(2, powerOfTwo++) - groupSize;
+		endIdx = startIdx + groupSize;
+		if (endIdx > pairsSize)
+			endIdx = pairsSize;
+
+		PmergeMe::reverse(pairs, startIdx, endIdx - 1);
+	}
+}
+
+template <typename Container>
+void PmergeMe::reverse( Container * source, size_t start, size_t end ) {
+	while (start < end) {
+		std::swap(source[start], source[end]);
+		++start;
+		--end;
+	}
+}
+
+template <typename Container>
+void PmergeMe::binary_search_insertion( Container & S, Container * pend, size_t pendSize ) {
+	typename Container::iterator it;
+	size_t idx = 0;
+
+	while (idx < pendSize) {
+		it = std::lower_bound(S.begin(), S.begin() + idx + pend[idx][1], pend[idx][0]);
+		S.insert(it, pend[idx][0]);
+		idx++;
+	}
 }
 
 // helpers
@@ -147,7 +179,8 @@ bool PmergeMe::is_valid_number( const std::string & source ) throw () {
 		i++;
 	}
 
-	if (std::atol(source.c_str()) > std::numeric_limits<int>::max())
+	long long sourceNum = std::atol(source.c_str());
+	if (sourceNum <= 0 || sourceNum > std::numeric_limits<int>::max())
 		return (false);
 
 	return (true);
@@ -171,7 +204,8 @@ void PmergeMe::container_print_execution_time_calc_decorator( void (*foo)(Contai
 	struct timeval start_time, end_time;
 
 	gettimeofday(&start_time, NULL);
-	foo(container);
+	if (container.size() > 1)
+		foo(container);
 	gettimeofday(&end_time, NULL);
 
 	long duration = (end_time.tv_sec - start_time.tv_sec) * 1000000L + (end_time.tv_usec - start_time.tv_usec);
